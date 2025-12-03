@@ -1,0 +1,14 @@
+.card-lift {
+    border-radius: 1rem;
+    box-shadow: 0 .35rem 1rem rgba(0,0,0,.06);
+}
+
+.badge-unit {
+    font-weight: 600;
+}
+
+.precision-value {
+    min-width: 3.5rem;
+    display: inline-block;
+    text-align: right;
+}

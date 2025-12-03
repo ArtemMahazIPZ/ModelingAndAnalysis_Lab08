@@ -1,0 +1,23 @@
+@startuml
+title Components — Конвертер м^2↔га
+skinparam componentStyle rectangle
+skinparam line type ortho
+left to right direction
+
+package "Presentation" {
+  component "AreaConverter.UI" as UI <<Console/WPF>>
+}
+package "Application"  {
+  component "AreaConverter.App" as APP <<Facade>>
+}
+package "Domain" {
+  component "AreaConverterService" as SVC
+}
+package "Tests" {
+  component "AreaConverter.Tests" as TESTS <<xUnit>>
+}
+
+UI  ..> APP  : 1.1
+APP ..> SVC  : 1.2
+TESTS ..> SVC: 1.3
+@enduml

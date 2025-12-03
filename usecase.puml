@@ -1,0 +1,37 @@
+@startuml
+title Use Case — Конвертер м² у гектари
+
+skinparam actorStyle awesome
+skinparam usecase {
+    BackgroundColor LightBlue
+    BorderColor DarkBlue
+    ArrowColor DarkBlue
+}
+
+actor "Користувач" as User
+
+rectangle "AreaConverter" {
+  usecase "Ввести значення" as UC_Input
+  usecase "Обрати напрямок\n(м²→га або га→м²)" as UC_Dir
+  usecase "Задати точність\n(кількість знаків)" as UC_Prec
+  usecase "Виконати конвертацію" as UC_Convert
+  usecase "Переглянути результат" as UC_Result
+
+  UC_Input -[hidden]-> UC_Dir
+  UC_Dir -[hidden]-> UC_Prec
+  UC_Prec -[hidden]-> UC_Convert
+  UC_Convert -[hidden]-> UC_Result
+}
+
+User -right-> UC_Input
+User -right-> UC_Dir
+User -right-> UC_Prec
+User -down-> UC_Convert
+User -down-> UC_Result
+
+
+UC_Convert .left.> UC_Input : <<include>>
+UC_Convert .left.> UC_Dir : <<include>>
+UC_Result .right.> UC_Convert : <<include>>
+
+@enduml

@@ -1,0 +1,36 @@
+@startuml
+title Class — Модель конвертера м^2↔га
+skinparam line type ortho
+skinparam classAttributeIconSize 0
+
+class AreaConverterService {
+  + SquareMetersToHectares(m2: double, prec: int) : double
+  + HectaresToSquareMeters(ha: double, prec: int) : double
+  + Convert(req: AreaConversionRequest) : AreaConversionResult
+}
+
+class AreaConversionRequest {
+  + Value: double
+  + Direction: AreaDirection
+  + Precision: int
+}
+
+class AreaConversionResult {
+  + Input: double
+  + Output: double
+  + Direction: AreaDirection
+  + Precision: int
+}
+
+enum AreaDirection {
+  M2ToHa
+  HaToM2
+}
+
+AreaConverterService ..> AreaConversionRequest : uses
+AreaConverterService ..> AreaConversionResult  : returns
+
+note right of AreaConverterService
+  prec: за замовчуванням 4 (м^2→га), 2 (га→м^2)
+end note
+@enduml

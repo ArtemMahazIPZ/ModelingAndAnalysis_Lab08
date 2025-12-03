@@ -1,0 +1,80 @@
+﻿@{
+    ViewData["Title"] = "Конвертер м² ↔ гектари";
+}
+<div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+        <div class="card card-lift">
+            <div class="card-header bg-success bg-gradient text-white">
+                Площа — м² ↔ гектари
+            </div>
+            <div class="card-body">
+                <form class="vstack gap-3" onsubmit="convertArea(event)">
+                    <div>
+                        <label for="value" class="form-label">Я хочу перевести</label>
+                        <div class="input-group">
+                            <input id="value" class="form-control form-control-lg" type="number" step="any" min="0" placeholder="Напр., 12345" required>
+                            <span class="input-group-text fw-semibold" id="unitFrom">м²</span>
+                        </div>
+                        <div id="valError" class="text-danger small d-none">Введіть невід’ємне число</div>
+                    </div>
+
+                    <div>
+                        <label for="direction" class="form-label">Напрямок</label>
+                        <select id="direction" class="form-select form-select-lg" onchange="syncUnits()">
+                            <option value="m2toha">Квадратний метр (м²) → Гектар (га)</option>
+                            <option value="hatom2">Гектар (га) → Квадратний метр (м²)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="precision" class="form-label">
+                            Точність: <span class="precision-value" id="precVal">4</span> знаків
+                        </label>
+                        <input id="precision" type="range" min="0" max="8" value="4" class="form-range" oninput="syncPrec()" />
+                    </div>
+
+                    <button type="submit" class="btn btn-success btn-lg w-100">Конвертувати</button>
+
+                    <div id="resultWrap" class="alert alert-success mb-0 mt-2 py-2 px-3 d-none">
+                        <div id="resultText"></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function syncUnits(){
+          const dir = document.getElementById('direction').value;
+          document.getElementById('unitFrom').textContent = dir === 'm2toha' ? 'м²' : 'га';
+        }
+        function syncPrec(){
+          document.getElementById('precVal').textContent = document.getElementById('precision').value;
+        }
+        function convertArea(e){
+          e.preventDefault();
+          const v = parseFloat(document.getElementById('value').value);
+          const dir = document.getElementById('direction').value;
+          const prec = parseInt(document.getElementById('precision').value);
+          const err = document.getElementById('valError');
+
+          if (isNaN(v) || v < 0){ err.classList.remove('d-none'); return; }
+          err.classList.add('d-none');
+
+          const M2_PER_HA = 10000.0;
+          let result, unitFrom, unitTo;
+          if (dir === 'm2toha'){ result = v / M2_PER_HA; unitFrom='м²'; unitTo='га'; }
+          else { result = v * M2_PER_HA; unitFrom='га'; unitTo='м²'; }
+
+          const rounded = Number(result.toFixed(prec));
+          const html = `<strong>Результат:</strong> ${v} <span class="badge bg-light text-dark badge-unit">${unitFrom}</span>
+                        = <strong>${rounded}</strong> <span class="badge bg-light text-dark badge-unit">${unitTo}</span>
+                        <span class="text-muted">(точність ${prec})</span>`;
+          document.getElementById('resultText').innerHTML = html;
+          document.getElementById('resultWrap').classList.remove('d-none');
+        }
+        syncUnits(); syncPrec();
+    </script>
+}
